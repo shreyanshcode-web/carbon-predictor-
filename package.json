@@ -1,0 +1,16 @@
+{
+  "name": "greenmind-ai",
+  "version": "1.0.0",
+  "description": "GreenMind AI Personal Carbon Intelligence Platform Microservices",
+  "main": "gateway.js",
+  "scripts": {
+    "start": "node gateway.js",
+    "dev": "node gateway.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2"
+  }
+}

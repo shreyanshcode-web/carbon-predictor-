@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenMind AI - Personal Carbon Intelligence Platform</title>
+    <!-- Modern Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation Bar -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15.92V14h2.5c.83 0 1.5-.67 1.5-1.5v-2c0-.83-.67-1.5-1.5-1.5H13V6.08c0-.6-.48-1.08-1.08-1.08h-.84c-.6 0-1.08.48-1.08 1.08V9H7.5C6.67 9 6 9.67 6 10.5v2c0 .83.67 1.5 1.5 1.5H10v3.92c0 .6.48 1.08 1.08 1.08h.84c.6 0 1.08-.48 1.08-1.08z" style="display:none;"></path>
+                        <path d="M11 2a9 9 0 0 1 9 9V12a9 9 0 0 1-9 9m0-18a9 9 0 0 0-9 9v1a9 9 0 0 0 9 9" stroke="#10b981"></path>
+                        <path d="M12 7a5 5 0 0 1 5 5v1a5 5 0 0 1-5 5" stroke="#34d399"></path>
+                        <circle cx="12" cy="12" r="2" fill="#10b981"></circle>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>GreenMind <span>AI</span></h1>
+                    <p class="tagline">Personal Carbon Intelligence Platform</p>
+                </div>
+            </div>
+            <div class="header-controls">
+                <!-- Live Weather & Air Quality Badge -->
+                <div class="weather-telemetry-badge" id="weatherAqiBadge">
+                    <span class="telemetry-icon">🌍</span>
+                    <div class="telemetry-info">
+                        <span class="telemetry-label">Local AQI</span>
+                        <strong class="telemetry-val" id="aqiDisplay">Loading...</strong>
+                    </div>
+                </div>
+
+                <!-- User Profile Selector -->
+                <div class="profile-selector-wrapper" id="profileSelectorWrapper">
+                    <label for="profileSelect">Twin Profile:</label>
+                    <select id="profileSelect" class="profile-select">
+                        <option value="sarah">Sarah (Urban Commuter)</option>
+                        <option value="david">David (Suburban Homeowner)</option>
+                        <option value="elena">Elena (Off-grid Enthusiast)</option>
+                    </select>
+                </div>
+
+                <!-- User Session Control (Dynamic) -->
+                <div class="user-session-control" id="userSessionControl" style="display: none;">
+                    <span class="username-display" id="currentUserDisplay">User</span>
+                    <button id="logoutBtn" class="logout-btn">Log Out</button>
+                </div>
+                
+                <div class="connection-status">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Detecting...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Layout -->
+        <main class="dashboard-grid">
+            
+            <!-- Left Column: User Carbon Digital Twin -->
+            <section class="grid-panel panel-left digital-twin-section" id="digitalTwinPanel">
+                <div class="panel-header">
+                    <h2>User Carbon Digital Twin</h2>
+                    <span class="badge badge-accent">Live Sync</span>
+                </div>
+                
+                <div class="digital-twin-container">
+                    <!-- Main Radial Score -->
+                    <div class="score-circle-wrapper">
+                        <svg class="radial-progress-svg" viewBox="0 0 120 120">
+                            <circle class="radial-bg" cx="60" cy="60" r="50"></circle>
+                            <circle class="radial-bar" id="overallScoreRing" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="100"></circle>
+                        </svg>
+                        <div class="score-center-text">
+                            <span class="score-num" id="overallScoreVal">72</span>
+                            <span class="score-label">Carbon Score</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Sub-Scores with Progress Bars -->
+                    <div class="twin-metrics">
+                        <div class="metric-row">
+                            <div class="metric-label-row">
+                                <span class="metric-name">🚗 Mobility Score</span>
+                                <span class="metric-val" id="mobilityScoreVal">72%</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill mobility-fill" id="mobilityScoreBar" style="width: 72%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-row">
+                            <div class="metric-label-row">
+                                <span class="metric-name">⚡ Energy Score</span>
+                                <span class="metric-val" id="energyScoreVal">81%</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill energy-fill" id="energyScoreBar" style="width: 81%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-row">
+                            <div class="metric-label-row">
+                                <span class="metric-name">🍔 Food Score</span>
+                                <span class="metric-val" id="foodScoreVal">65%</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill food-fill" id="foodScoreBar" style="width: 65%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-row">
+                            <div class="metric-label-row">
+                                <span class="metric-name">🗑️ Waste Score</span>
+                                <span class="metric-val" id="wasteScoreVal">54%</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill waste-fill" id="wasteScoreBar" style="width: 54%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Digital Twin Profile Details -->
+                    <div class="twin-details-card">
+                        <h3>Dynamic Profile Characteristics</h3>
+                        <ul class="detail-list" id="twinDescriptionList">
+                            <!-- Dynamic items injected here -->
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Center Column: Core Agents and Prediction Engine -->
+            <div class="panel-center-stack">
+                
+                <!-- Section 1: Vertex AI Carbon Prediction Engine -->
+                <section class="grid-panel carbon-prediction-section" id="predictionPanel">
+                    <div class="panel-header">
+                        <div class="header-title-group">
+                            <h2>Carbon Prediction Engine</h2>
+                            <p class="panel-subtitle">Vertex AI Time-Series Forecasting Model</p>
+                        </div>
+                        <div class="forecast-selector">
+                            <button class="time-btn active" data-days="30">30 Days</button>
+                            <button class="time-btn" data-days="90">90 Days</button>
+                            <button class="time-btn" data-days="365">Annual</button>
+                        </div>
+                    </div>
+                    
+                    <div class="forecast-stats">
+                        <div class="f-stat-card current-trend">
+                            <span class="f-stat-label">Current Trend</span>
+                            <span class="f-stat-val" id="forecastCurrentVal">2.4 tons</span>
+                            <span class="f-stat-trend negative">CO₂ / year</span>
+                        </div>
+                        <div class="f-stat-card target-trend">
+                            <span class="f-stat-label">Target Trend (With Plans)</span>
+                            <span class="f-stat-val" id="forecastTargetVal">1.6 tons</span>
+                            <span class="f-stat-trend positive" id="forecastSavingsVal">-800 kg saved</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <!-- Custom SVG Chart representing Prediction -->
+                        <svg class="prediction-chart" viewBox="0 0 600 220" id="forecastChart">
+                            <defs>
+                                <linearGradient id="currentGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#ef4444" stop-opacity="0.3"></stop>
+                                    <stop offset="100%" stop-color="#ef4444" stop-opacity="0.0"></stop>
+                                </linearGradient>
+                                <linearGradient id="targetGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#10b981" stop-opacity="0.3"></stop>
+                                    <stop offset="100%" stop-color="#10b981" stop-opacity="0.0"></stop>
+                                </linearGradient>
+                            </defs>
+                            
+                            <!-- Grid lines -->
+                            <line x1="40" y1="20" x2="580" y2="20" class="chart-grid-line"></line>
+                            <line x1="40" y1="70" x2="580" y2="70" class="chart-grid-line"></line>
+                            <line x1="40" y1="120" x2="580" y2="120" class="chart-grid-line"></line>
+                            <line x1="40" y1="170" x2="580" y2="170" class="chart-grid-line"></line>
+                            
+                            <!-- X & Y Axis labels (dynamically generated in JS) -->
+                            <g id="chartXLabels" class="chart-labels"></g>
+                            <g id="chartYLabels" class="chart-labels"></g>
+                            
+                            <!-- Filled areas -->
+                            <path id="currentArea" fill="url(#currentGrad)" d=""></path>
+                            <path id="targetArea" fill="url(#targetGrad)" d=""></path>
+                            
+                            <!-- Chart lines -->
+                            <path id="currentPath" fill="none" stroke="#ef4444" stroke-width="3" stroke-dasharray="0" d=""></path>
+                            <path id="targetPath" fill="none" stroke="#10b981" stroke-width="3" d=""></path>
+                            
+                            <!-- Interactive Dots (hover/touch) -->
+                            <g id="chartPoints"></g>
+                        </svg>
+                        
+                        <div class="chart-legend">
+                            <div class="legend-item"><span class="legend-dot current-dot"></span> Current Trend (Car Dependent)</div>
+                            <div class="legend-item"><span class="legend-dot target-dot"></span> Optimization Pathway (GreenMind AI Actions)</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: AI Carbon Intelligence Layer (Agents) -->
+                <section class="grid-panel agents-container" id="agentsPanel">
+                    <div class="panel-header">
+                        <h2>AI Carbon Intelligence Layer</h2>
+                        <span class="badge badge-info">Multi-Agent System</span>
+                    </div>
+
+                    <div class="tabs-control">
+                        <button class="tab-btn active" data-tab="mobility">🚗 Mobility Agent</button>
+                        <button class="tab-btn" data-tab="consumption">💳 Consumption Agent</button>
+                        <button class="tab-btn" data-tab="energy">⚡ Home Energy Agent</button>
+                    </div>
+
+                    <!-- Mobility Tab Panel -->
+                    <div class="tab-panel active" id="tab-mobility">
+                        <div class="agent-summary">
+                            <div class="agent-badge">Agent 1: Mobility Intelligence</div>
+                            <div class="agent-inputs-outputs">
+                                <strong>Inputs:</strong> Maps Timeline, GPS Travel History &bull; <strong>Outputs:</strong> Daily Route CO₂ Estimation
+                            </div>
+                        </div>
+                        
+                        <div class="mobility-grid">
+                            <!-- Left: Map Mockup -->
+                            <div class="mobility-map-container">
+                                <div class="map-overlay">
+                                    <div class="map-route-card">
+                                        <h4 id="routeCardTitle">Commute to Work</h4>
+                                        <p id="routeCardDetails">Distance: 18.5 km | Mode: ICE Vehicle</p>
+                                        <div class="route-calc" id="routeCardCarbon">
+                                            <span>Emissions:</span> <strong>3.55 kg CO₂</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Pure CSS/SVG Simulated Map -->
+                                <svg class="simulated-map" viewBox="0 0 300 180" id="simulatedMap">
+                                    <!-- Map Roads/Grid background -->
+                                    <rect width="300" height="180" fill="#1e293b"></rect>
+                                    <path d="M 0 50 L 300 50 M 0 130 L 300 130 M 100 0 L 100 180 M 210 0 L 210 180" stroke="#334155" stroke-width="8"></path>
+                                    <path d="M 0 50 L 300 50 M 0 130 L 300 130 M 100 0 L 100 180 M 210 0 L 210 180" stroke="#475569" stroke-width="2" stroke-dasharray="5 5"></path>
+                                    
+                                    <!-- Green Spaces -->
+                                    <rect x="10" y="10" width="80" height="30" rx="5" fill="#065f46" opacity="0.4"></rect>
+                                    <rect x="220" y="60" width="70" height="60" rx="5" fill="#065f46" opacity="0.4"></rect>
+                                    
+                                    <!-- Active Transit Route -->
+                                    <path id="mapRoutePath" d="M 50 130 L 100 130 L 100 50 L 210 50 L 210 90" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round"></path>
+                                    <path id="mapRoutePathAnim" d="M 50 130 L 100 130 L 100 50 L 210 50 L 210 90" fill="none" stroke="#67e8f9" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 100" stroke-dashoffset="0">
+                                        <animate attributeName="stroke-dashoffset" values="0; -110" dur="5s" repeatCount="indefinite" />
+                                    </path>
+                                    
+                                    <!-- Pins -->
+                                    <circle cx="50" cy="130" r="6" fill="#ef4444"></circle>
+                                    <circle cx="210" cy="90" r="6" fill="#3b82f6"></circle>
+                                </svg>
+                            </div>
+                            
+                            <!-- Right: Travel History Table -->
+                            <div class="mobility-logs">
+                                <h3>Google Maps Mobility Log</h3>
+                                <div class="log-table-wrapper">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Route / Activity</th>
+                                                <th>Distance</th>
+                                                <th>Mode</th>
+                                                <th>CO₂</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="mobilityLogBody">
+                                            <!-- Injected via JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Consumption Tab Panel -->
+                    <div class="tab-panel" id="tab-consumption">
+                        <div class="agent-summary">
+                            <div class="agent-badge">Agent 2: Consumption Intelligence</div>
+                            <div class="agent-inputs-outputs">
+                                <strong>Inputs:</strong> UPI, Credit Cards, Bank Transaction Streams &bull; <strong>Outputs:</strong> Automated Transaction Carbon Footprint Classification
+                            </div>
+                        </div>
+                        
+                        <div class="consumption-grid">
+                            <div class="transactions-feed">
+                                <div class="feed-header-row">
+                                    <h3>UPI & Card Transactions</h3>
+                                    <button class="action-btn-small" id="simulateTxBtn">⚡ Simulate Transaction</button>
+                                </div>
+                                <div class="transaction-list" id="transactionList">
+                                    <!-- Dynamic Transaction rows injected here -->
+                                </div>
+                            </div>
+                            
+                            <!-- Carbon Database Mapping Info -->
+                            <div class="carbon-database-card">
+                                <h3>Carbon Engine Model</h3>
+                                <p>Transactions are classified and matched in real-time to carbon emission coefficient databases (IEA / IPCC standards):</p>
+                                <div class="math-formula-box">
+                                    <span class="math-label">Carbon Formula:</span>
+                                    <span class="math-equation">Activity Amount &times; Emission Factor = Net CO₂</span>
+                                    <span class="math-example" id="formulaExample">e.g., 20 km Gasoline Car Travel &times; 0.192 kg CO₂/km = 3.84 kg CO₂</span>
+                                </div>
+                                <div class="carbon-database-links">
+                                    <div class="db-badge">IPCC Carbon Databases v4.2</div>
+                                    <div class="db-badge">IEA Global Emissions Factors 2025</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Home Energy Tab Panel -->
+                    <div class="tab-panel" id="tab-energy">
+                        <div class="agent-summary">
+                            <div class="agent-badge">Agent 3: Home Energy Intelligence</div>
+                            <div class="agent-inputs-outputs">
+                                <strong>Inputs:</strong> Smart Meter Data, Electricity Bills, Solar Output &bull; <strong>Outputs:</strong> Peak hours analysis, daily offset projection
+                            </div>
+                        </div>
+                        
+                        <div class="energy-grid">
+                            <!-- Smart Meter Dials -->
+                            <div class="energy-stats">
+                                <div class="energy-stat-gauge">
+                                    <span class="gauge-label">Solar Generation</span>
+                                    <div class="gauge-circle-container">
+                                        <svg class="radial-energy-svg" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="40" class="radial-energy-bg"></circle>
+                                            <circle cx="50" cy="50" r="40" class="radial-energy-bar solar-bar" id="solarGaugeRing" stroke-dasharray="251.2" stroke-dashoffset="180"></circle>
+                                        </svg>
+                                        <div class="gauge-value" id="solarGaugeVal">2.8 kW</div>
+                                    </div>
+                                    <span class="gauge-sub" id="solarGaugeSub">Offsetting 35% of load</span>
+                                </div>
+                                
+                                <div class="energy-stat-gauge">
+                                    <span class="gauge-label">Home Power Consumption</span>
+                                    <div class="gauge-circle-container">
+                                        <svg class="radial-energy-svg" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="40" class="radial-energy-bg"></circle>
+                                            <circle cx="50" cy="50" r="40" class="radial-energy-bar load-bar" id="loadGaugeRing" stroke-dasharray="251.2" stroke-dashoffset="120"></circle>
+                                        </svg>
+                                        <div class="gauge-value" id="loadGaugeVal">1.2 kW</div>
+                                    </div>
+                                    <span class="gauge-sub negative" id="loadGaugeSub">Grid Draw: 0.0 kW (Net Metering)</span>
+                                </div>
+                            </div>
+
+                            <!-- Live AC / Appliance Controls Simulator -->
+                            <div class="appliance-controls">
+                                <h3>Smart Thermostat & AC Simulator</h3>
+                                <div class="slider-control-group">
+                                    <div class="slider-label-row">
+                                        <span>Air Conditioner Temp Setpoint:</span>
+                                        <strong id="thermostatVal">24°C</strong>
+                                    </div>
+                                    <input type="range" id="thermostatSlider" min="18" max="30" value="24" class="custom-slider">
+                                    <div class="slider-helper-text">
+                                        Increasing setpoint by 1°C saves approximately 6% of cooling emissions.
+                                    </div>
+                                </div>
+                                
+                                <div class="appliance-toggle-grid">
+                                    <div class="toggle-card">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="solarBatteryToggle" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-label">Solar Battery Storage</span>
+                                    </div>
+                                    <div class="toggle-card">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="peakShiftToggle">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-label">Grid Load Peak Shifting</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: What-If Simulator & Carbon Chat -->
+            <div class="panel-right-stack">
+                
+                <!-- What-If Simulator -->
+                <section class="grid-panel what-if-section" id="whatIfPanel">
+                    <div class="panel-header">
+                        <h2>What-If Simulator</h2>
+                        <span class="badge badge-accent">Interactive sandbox</span>
+                    </div>
+                    
+                    <div class="what-if-controls">
+                        <!-- EV Option -->
+                        <div class="simulator-slider-group">
+                            <div class="slider-label-row">
+                                <span>Vehicle Electrification</span>
+                                <strong id="simEvVal">No EV</strong>
+                            </div>
+                            <input type="range" id="simEvSlider" min="0" max="2" value="0" class="custom-slider">
+                            <div class="slider-tiers">
+                                <span>ICE Car</span>
+                                <span>Hybrid</span>
+                                <span>Full EV</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Diet Modifier -->
+                        <div class="simulator-slider-group">
+                            <div class="slider-label-row">
+                                <span>Plant-Based Diet Days</span>
+                                <strong id="simDietVal">0 days/wk</strong>
+                            </div>
+                            <input type="range" id="simDietSlider" min="0" max="7" value="0" class="custom-slider">
+                            <div class="slider-tiers">
+                                <span>Omnivore</span>
+                                <span>Flexitarian</span>
+                                <span>Vegan</span>
+                            </div>
+                        </div>
+
+                        <!-- Solar Panel capacity -->
+                        <div class="simulator-slider-group">
+                            <div class="slider-label-row">
+                                <span>Rooftop Solar Capacity</span>
+                                <strong id="simSolarVal">None</strong>
+                            </div>
+                            <input type="range" id="simSolarSlider" min="0" max="10" value="0" step="2" class="custom-slider">
+                            <div class="slider-tiers">
+                                <span>None</span>
+                                <span>5kW System</span>
+                                <span>10kW System</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Fly Counter -->
+                        <div class="simulator-slider-group">
+                            <div class="slider-label-row">
+                                <span>Annual Flight Hours</span>
+                                <strong id="simFlightVal">15 Hours</strong>
+                            </div>
+                            <input type="range" id="simFlightSlider" min="0" max="60" value="15" step="5" class="custom-slider">
+                            <div class="slider-tiers">
+                                <span>Train-only</span>
+                                <span>Medium</span>
+                                <span>High-Flyer</span>
+                            </div>
+                        </div>
+
+                        <!-- Public Transit Commutes -->
+                        <div class="simulator-slider-group">
+                            <div class="slider-label-row">
+                                <span>Public Transit Commutes</span>
+                                <strong id="simTransitVal">None</strong>
+                            </div>
+                            <input type="range" id="simTransitSlider" min="0" max="7" value="0" class="custom-slider">
+                            <div class="slider-tiers">
+                                <span>0 days/wk</span>
+                                <span>3 days/wk</span>
+                                <span>7 days/wk</span>
+                            </div>
+                        </div>
+
+                        <!-- Home Heating System -->
+                        <div class="simulator-slider-group">
+                            <div class="slider-label-row">
+                                <span>Home Heating System</span>
+                                <strong id="simHeatingVal">Gas Furnace</strong>
+                            </div>
+                            <input type="range" id="simHeatingSlider" min="0" max="2" value="0" class="custom-slider">
+                            <div class="slider-tiers">
+                                <span>Gas Furnace</span>
+                                <span>Electric Baseboard</span>
+                                <span>Heat Pump</span>
+                            </div>
+                        </div>
+
+                        <!-- Waste Diversion Rate -->
+                        <div class="simulator-slider-group">
+                            <div class="slider-label-row">
+                                <span>Waste Diversion Rate</span>
+                                <strong id="simWasteVal">20%</strong>
+                            </div>
+                            <input type="range" id="simWasteSlider" min="0" max="100" value="20" step="5" class="custom-slider">
+                            <div class="slider-tiers">
+                                <span>0% (Landfill)</span>
+                                <span>50% (Recycle)</span>
+                                <span>100% (Zero-Waste)</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Carbon Chat Assistant (Gemini) -->
+                <section class="grid-panel chat-section" id="chatPanel">
+                    <div class="panel-header">
+                        <div class="chat-title-group">
+                            <h2>Carbon Chat Assistant</h2>
+                            <p class="panel-subtitle">Powered by Gemini 3.5 Flash</p>
+                        </div>
+                        <span class="badge badge-success">Online</span>
+                    </div>
+
+                    <div class="chat-output" id="chatOutput">
+                        <div class="chat-bubble system-bubble">
+                            <p>Hi, I am your GreenMind AI sustainability copilot. I analyze your Digital Twin, maps data, smart meter activity, and expenses to help you identify reduction pathways. Ask me anything about your carbon footprint!</p>
+                        </div>
+                    </div>
+
+                    <!-- Prompt suggestions -->
+                    <div class="chat-suggestions">
+                        <button class="suggest-btn" data-query="Why was my footprint high this week?">🔍 Why was my footprint high this week?</button>
+                        <button class="suggest-btn" data-query="What if I buy an EV?">🚗 Impact of buying an EV?</button>
+                        <button class="suggest-btn" data-query="Give me a location-aware recommendation based on tree density">🌳 Earth Engine local context?</button>
+                    </div>
+
+                    <form class="chat-input-form" id="chatForm">
+                        <input type="text" id="chatInput" placeholder="Ask Gemini about your carbon twin..." required>
+                        <button type="submit" class="chat-send-btn">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </form>
+                </section>
+            </div>
+        </main>
+        <!-- Bottom Layout: Reduction Planner, Gamification, and GCP Telemetry Console -->
+        <section class="bottom-row-grid">
+            
+            <!-- Carbon Reduction Planner (Roadmap) -->
+            <div class="grid-panel planner-card" id="plannerPanel">
+                <div class="panel-header">
+                    <h2>Carbon Reduction Planner</h2>
+                    <p class="panel-subtitle">Tailored AI-Generated Plan to reduce carbon emissions by 25%</p>
+                </div>
+                
+                <div class="planner-checklist" id="plannerChecklist">
+                    <!-- Dynamic Checklist items injected here -->
+                </div>
+            </div>
+
+            <!-- Gamification / Leaderboard / Badges -->
+            <div class="grid-panel gamification-card" id="gamificationPanel">
+                <div class="panel-header">
+                    <h2>Gamification & Achievements</h2>
+                    <span class="badge badge-accent">Firebase Gamified Layer</span>
+                </div>
+                
+                <div class="gamification-layout">
+                    <!-- Badges cabinet -->
+                    <div class="badges-cabinet">
+                        <h3>Unlocked Badges</h3>
+                        <div class="badges-grid" id="badgesGrid">
+                            <!-- Dynamic Badges injected here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Social Leaderboard -->
+                    <div class="social-leaderboard">
+                        <h3>Social Circle Leaderboard</h3>
+                        <ol class="leaderboard-list" id="leaderboardList">
+                            <!-- Dynamic Leaderboard list injected here -->
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Google Cloud Deployment Telemetry Console -->
+            <div class="grid-panel telemetry-card" id="telemetryPanel">
+                <div class="panel-header">
+                    <h2>GCP Run Service Telemetry</h2>
+                    <span class="badge badge-info">Pub/Sub Console</span>
+                </div>
+                <div class="telemetry-console-wrapper">
+                    <div class="console-body" id="telemetryConsole">
+                        <!-- Scrolling GCP Logs injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Auth Overlay Modal -->
+    <div id="authOverlay" class="auth-overlay active">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>GreenMind <span>AI</span></h2>
+                <p>Personal Carbon Intelligence Platform</p>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form">
+                <h3>Welcome Back</h3>
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="auth-btn">Log In</button>
+                <p class="auth-toggle-text">Don't have an account? <a href="#" id="toSignupBtn">Sign Up</a></p>
+            </form>
+
+            <!-- Signup Form (Hidden by default) -->
+            <form id="signupForm" class="auth-form hidden">
+                <h3>Create Account</h3>
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupProfileType">Lifestyle Profile</label>
+                    <select id="signupProfileType" class="profile-select">
+                        <option value="Urban Commuter">Urban Commuter</option>
+                        <option value="Suburban Homeowner">Suburban Homeowner</option>
+                        <option value="Off-grid Enthusiast">Off-grid Enthusiast</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="signupCity">City Location</label>
+                    <div class="location-input-group">
+                        <input type="text" id="signupCity" placeholder="City, Country" value="San Francisco" required>
+                        <button type="button" id="detectLocationBtn" class="detect-btn" title="Detect Location">📍</button>
+                    </div>
+                </div>
+                <button type="submit" class="auth-btn">Create Digital Twin</button>
+                <p class="auth-toggle-text">Already have an account? <a href="#" id="toLoginBtn">Log In</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast for Badge unlocks or UI feedback -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <!-- Canvas for Confetti particle explosion animations -->
+    <canvas id="confettiCanvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 999;"></canvas>
+</body>
+</html>
