@@ -1,3 +1,4 @@
+process.env.NODE_ENV = 'test';
 const test = require('node:test');
 const assert = require('node:assert');
 
@@ -7,7 +8,6 @@ let server;
 const PORT = 3010;
 
 test.before(() => {
-    process.env.NODE_ENV = 'test';
     server = app.listen(PORT);
 });
 

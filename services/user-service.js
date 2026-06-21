@@ -21,7 +21,7 @@ const defaultHashedPassword = hashPassword("password123");
 
 // Mock Firestore Database Storage
 const firestoreDb = {
-    sarah: {
+    sarah_greenmind_com: {
         id: "sarah",
         name: "Sarah",
         email: "sarah@greenmind.com",
@@ -51,7 +51,7 @@ const firestoreDb = {
             ]
         }
     },
-    david: {
+    david_greenmind_com: {
         id: "david",
         name: "David",
         email: "david@greenmind.com",
@@ -79,7 +79,7 @@ const firestoreDb = {
             ]
         }
     },
-    elena: {
+    elena_greenmind_com: {
         id: "elena",
         name: "Elena",
         email: "elena@greenmind.com",
@@ -109,6 +109,14 @@ const firestoreDb = {
     }
 };
 
+// Helper to map short switcher IDs to key formats
+function mapProfileId(profileId) {
+    if (profileId === 'sarah') return 'sarah_greenmind_com';
+    if (profileId === 'david') return 'david_greenmind_com';
+    if (profileId === 'elena') return 'elena_greenmind_com';
+    return profileId;
+}
+
 /**
  * [MARKING]: CLOUD_RUN_USER_SERVICE_GET_PROFILE
  * [DESCRIPTION]: Retrieves profile and Digital Twin state from mock Firestore database.
@@ -116,7 +124,7 @@ const firestoreDb = {
  * [RETURNS]: JSON object representing user state
  */
 router.get('/:profileId', (req, res) => {
-    const profileId = req.params.profileId;
+    const profileId = mapProfileId(req.params.profileId);
     console.log(`[USER-SERVICE] Fetching profile data for user: ${profileId}`);
     const profile = firestoreDb[profileId];
     if (profile) {
@@ -136,7 +144,7 @@ router.get('/:profileId', (req, res) => {
  * [RETURNS]: JSON updated profile object
  */
 router.post('/:profileId/twin', (req, res) => {
-    const profileId = req.params.profileId;
+    const profileId = mapProfileId(req.params.profileId);
     const { mobility_score, energy_score, food_score, waste_score, overall_carbon_score } = req.body;
     
     console.log(`[USER-SERVICE] Syncing Digital Twin scores for user: ${profileId}`);
