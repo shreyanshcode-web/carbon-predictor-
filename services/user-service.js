@@ -1,11 +1,31 @@
 const express = require('express');
 const router = express.Router();
+const crypto = require('crypto');
+
+// Password security helper using PBKDF2
+function hashPassword(password) {
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+    return `${salt}:${hash}`;
+}
+
+function verifyPassword(password, storedPassword) {
+    if (!storedPassword || !storedPassword.includes(':')) return false;
+    const [salt, originalHash] = storedPassword.split(':');
+    const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+    return hash === originalHash;
+}
+
+// Pre-hashed default password "password123" for safety alignment
+const defaultHashedPassword = hashPassword("password123");
 
 // Mock Firestore Database Storage
 const firestoreDb = {
     sarah: {
         id: "sarah",
         name: "Sarah",
+        email: "sarah@greenmind.com",
+        password: defaultHashedPassword,
         type: "Urban Commuter",
         treeCanopyDensity: "Medium (15% coverage)",
         localTransportQuality: "High (Subway/Busses near 200m)",
@@ -34,6 +54,8 @@ const firestoreDb = {
     david: {
         id: "david",
         name: "David",
+        email: "david@greenmind.com",
+        password: defaultHashedPassword,
         type: "Suburban Homeowner",
         treeCanopyDensity: "High (35% coverage)",
         localTransportQuality: "Low (Car-dependent, no subway)",
@@ -60,6 +82,8 @@ const firestoreDb = {
     elena: {
         id: "elena",
         name: "Elena",
+        email: "elena@greenmind.com",
+        password: defaultHashedPassword,
         type: "Off-grid Enthusiast",
         treeCanopyDensity: "Dense (55% coverage)",
         localTransportQuality: "Medium (Bike lanes present)",
@@ -96,7 +120,10 @@ router.get('/:profileId', (req, res) => {
     console.log(`[USER-SERVICE] Fetching profile data for user: ${profileId}`);
     const profile = firestoreDb[profileId];
     if (profile) {
-        res.json(profile);
+        // Return without password hash for safety
+        const safeProfile = { ...profile };
+        delete safeProfile.password;
+        res.json(safeProfile);
     } else {
         res.status(404).json({ error: "Profile not found" });
     }
@@ -122,7 +149,9 @@ router.post('/:profileId/twin', (req, res) => {
             waste_score: waste_score ?? profile.digitalTwin.waste_score,
             overall_carbon_score: overall_carbon_score ?? profile.digitalTwin.overall_carbon_score
         };
-        res.json(profile);
+        const safeProfile = { ...profile };
+        delete safeProfile.password;
+        res.json(safeProfile);
     } else {
         res.status(404).json({ error: "Profile not found" });
     }
@@ -139,6 +168,16 @@ router.post('/register', (req, res) => {
         return res.status(400).json({ error: "Name, email, and password are required" });
     }
 
+    // Basic Input Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: "Invalid email address format" });
+    }
+
+    if (password.length < 6) {
+        return res.status(400).json({ error: "Password must be at least 6 characters long" });
+    }
+
     const key = email.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
     if (firestoreDb[key]) {
         return res.status(400).json({ error: "User already exists with this email" });
@@ -148,7 +187,7 @@ router.post('/register', (req, res) => {
         id: key,
         name,
         email,
-        password,
+        password: hashPassword(password),
         type: type || "Urban Commuter",
         city: city || "San Francisco",
         latitude: latitude || 37.7749,
@@ -173,7 +212,10 @@ router.post('/register', (req, res) => {
     };
 
     firestoreDb[key] = newProfile;
-    res.status(201).json(newProfile);
+    
+    const safeProfile = { ...newProfile };
+    delete safeProfile.password;
+    res.status(201).json(safeProfile);
 });
 
 /**
@@ -190,11 +232,14 @@ router.post('/login', (req, res) => {
     const key = email.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
     const profile = firestoreDb[key];
 
-    if (profile && profile.password === password) {
-        res.json(profile);
+    if (profile && verifyPassword(password, profile.password)) {
+        const safeProfile = { ...profile };
+        delete safeProfile.password;
+        res.json(safeProfile);
     } else {
         res.status(401).json({ error: "Invalid email or password" });
     }
 });
 
 module.exports = router;
+

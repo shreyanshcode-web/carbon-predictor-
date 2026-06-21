@@ -74,7 +74,8 @@
                 <div class="digital-twin-container">
                     <!-- Main Radial Score -->
                     <div class="score-circle-wrapper">
-                        <svg class="radial-progress-svg" viewBox="0 0 120 120">
+                        <svg class="radial-progress-svg" viewBox="0 0 120 120" role="img" aria-label="Overall Carbon Score Radial Meter">
+                            <title>Overall Carbon Score Radial Progress Meter</title>
                             <circle class="radial-bg" cx="60" cy="60" r="50"></circle>
                             <circle class="radial-bar" id="overallScoreRing" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="100"></circle>
                         </svg>
@@ -91,7 +92,7 @@
                                 <span class="metric-name">🚗 Mobility Score</span>
                                 <span class="metric-val" id="mobilityScoreVal">72%</span>
                             </div>
-                            <div class="progress-bar-bg">
+                            <div class="progress-bar-bg" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" id="mobilityProgressWrapper">
                                 <div class="progress-bar-fill mobility-fill" id="mobilityScoreBar" style="width: 72%;"></div>
                             </div>
                         </div>
@@ -101,7 +102,7 @@
                                 <span class="metric-name">⚡ Energy Score</span>
                                 <span class="metric-val" id="energyScoreVal">81%</span>
                             </div>
-                            <div class="progress-bar-bg">
+                            <div class="progress-bar-bg" role="progressbar" aria-valuenow="81" aria-valuemin="0" aria-valuemax="100" id="energyProgressWrapper">
                                 <div class="progress-bar-fill energy-fill" id="energyScoreBar" style="width: 81%;"></div>
                             </div>
                         </div>
@@ -111,7 +112,7 @@
                                 <span class="metric-name">🍔 Food Score</span>
                                 <span class="metric-val" id="foodScoreVal">65%</span>
                             </div>
-                            <div class="progress-bar-bg">
+                            <div class="progress-bar-bg" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" id="foodProgressWrapper">
                                 <div class="progress-bar-fill food-fill" id="foodScoreBar" style="width: 65%;"></div>
                             </div>
                         </div>
@@ -121,7 +122,7 @@
                                 <span class="metric-name">🗑️ Waste Score</span>
                                 <span class="metric-val" id="wasteScoreVal">54%</span>
                             </div>
-                            <div class="progress-bar-bg">
+                            <div class="progress-bar-bg" role="progressbar" aria-valuenow="54" aria-valuemin="0" aria-valuemax="100" id="wasteProgressWrapper">
                                 <div class="progress-bar-fill waste-fill" id="wasteScoreBar" style="width: 54%;"></div>
                             </div>
                         </div>
@@ -169,7 +170,8 @@
 
                     <div class="chart-container">
                         <!-- Custom SVG Chart representing Prediction -->
-                        <svg class="prediction-chart" viewBox="0 0 600 220" id="forecastChart">
+                        <svg class="prediction-chart" viewBox="0 0 600 220" id="forecastChart" role="img" aria-label="Line chart showing personal carbon emissions projections over time">
+                            <title>Line chart showing personal carbon emissions projections over time</title>
                             <defs>
                                 <linearGradient id="currentGrad" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="0%" stop-color="#ef4444" stop-opacity="0.3"></stop>
@@ -182,18 +184,18 @@
                             </defs>
                             
                             <!-- Grid lines -->
-                            <line x1="40" y1="20" x2="580" y2="20" class="chart-grid-line"></line>
-                            <line x1="40" y1="70" x2="580" y2="70" class="chart-grid-line"></line>
-                            <line x1="40" y1="120" x2="580" y2="120" class="chart-grid-line"></line>
-                            <line x1="40" y1="170" x2="580" y2="170" class="chart-grid-line"></line>
+                            <line x1="40" y1="20" x2="580" y2="20" class="chart-grid-line" aria-hidden="true"></line>
+                            <line x1="40" y1="70" x2="580" y2="70" class="chart-grid-line" aria-hidden="true"></line>
+                            <line x1="40" y1="120" x2="580" y2="120" class="chart-grid-line" aria-hidden="true"></line>
+                            <line x1="40" y1="170" x2="580" y2="170" class="chart-grid-line" aria-hidden="true"></line>
                             
                             <!-- X & Y Axis labels (dynamically generated in JS) -->
                             <g id="chartXLabels" class="chart-labels"></g>
                             <g id="chartYLabels" class="chart-labels"></g>
                             
                             <!-- Filled areas -->
-                            <path id="currentArea" fill="url(#currentGrad)" d=""></path>
-                            <path id="targetArea" fill="url(#targetGrad)" d=""></path>
+                            <path id="currentArea" fill="url(#currentGrad)" d="" aria-hidden="true"></path>
+                            <path id="targetArea" fill="url(#targetGrad)" d="" aria-hidden="true"></path>
                             
                             <!-- Chart lines -->
                             <path id="currentPath" fill="none" stroke="#ef4444" stroke-width="3" stroke-dasharray="0" d=""></path>
@@ -217,14 +219,14 @@
                         <span class="badge badge-info">Multi-Agent System</span>
                     </div>
 
-                    <div class="tabs-control">
-                        <button class="tab-btn active" data-tab="mobility">🚗 Mobility Agent</button>
-                        <button class="tab-btn" data-tab="consumption">💳 Consumption Agent</button>
-                        <button class="tab-btn" data-tab="energy">⚡ Home Energy Agent</button>
+                    <div class="tabs-control" role="tablist" aria-label="Carbon Intelligence Agents">
+                        <button class="tab-btn active" data-tab="mobility" role="tab" aria-selected="true" aria-controls="tab-mobility" id="tab-mobility-btn">🚗 Mobility Agent</button>
+                        <button class="tab-btn" data-tab="consumption" role="tab" aria-selected="false" aria-controls="tab-consumption" id="tab-consumption-btn">💳 Consumption Agent</button>
+                        <button class="tab-btn" data-tab="energy" role="tab" aria-selected="false" aria-controls="tab-energy" id="tab-energy-btn">⚡ Home Energy Agent</button>
                     </div>
 
                     <!-- Mobility Tab Panel -->
-                    <div class="tab-panel active" id="tab-mobility">
+                    <div class="tab-panel active" id="tab-mobility" role="tabpanel" aria-labelledby="tab-mobility-btn">
                         <div class="agent-summary">
                             <div class="agent-badge">Agent 1: Mobility Intelligence</div>
                             <div class="agent-inputs-outputs">
@@ -245,7 +247,8 @@
                                     </div>
                                 </div>
                                 <!-- Pure CSS/SVG Simulated Map -->
-                                <svg class="simulated-map" viewBox="0 0 300 180" id="simulatedMap">
+                                <svg class="simulated-map" viewBox="0 0 300 180" id="simulatedMap" role="img" aria-label="Interactive simulated roadmap grid map representing GPS journeys">
+                                    <title>Simulated GPS route mapping</title>
                                     <!-- Map Roads/Grid background -->
                                     <rect width="300" height="180" fill="#1e293b"></rect>
                                     <path d="M 0 50 L 300 50 M 0 130 L 300 130 M 100 0 L 100 180 M 210 0 L 210 180" stroke="#334155" stroke-width="8"></path>
@@ -290,7 +293,7 @@
                     </div>
 
                     <!-- Consumption Tab Panel -->
-                    <div class="tab-panel" id="tab-consumption">
+                    <div class="tab-panel" id="tab-consumption" role="tabpanel" aria-labelledby="tab-consumption-btn">
                         <div class="agent-summary">
                             <div class="agent-badge">Agent 2: Consumption Intelligence</div>
                             <div class="agent-inputs-outputs">
@@ -327,7 +330,7 @@
                     </div>
 
                     <!-- Home Energy Tab Panel -->
-                    <div class="tab-panel" id="tab-energy">
+                    <div class="tab-panel" id="tab-energy" role="tabpanel" aria-labelledby="tab-energy-btn">
                         <div class="agent-summary">
                             <div class="agent-badge">Agent 3: Home Energy Intelligence</div>
                             <div class="agent-inputs-outputs">
@@ -413,7 +416,7 @@
                         <!-- EV Option -->
                         <div class="simulator-slider-group">
                             <div class="slider-label-row">
-                                <span>Vehicle Electrification</span>
+                                <label for="simEvSlider">Vehicle Electrification</label>
                                 <strong id="simEvVal">No EV</strong>
                             </div>
                             <input type="range" id="simEvSlider" min="0" max="2" value="0" class="custom-slider">
@@ -427,7 +430,7 @@
                         <!-- Diet Modifier -->
                         <div class="simulator-slider-group">
                             <div class="slider-label-row">
-                                <span>Plant-Based Diet Days</span>
+                                <label for="simDietSlider">Plant-Based Diet Days</label>
                                 <strong id="simDietVal">0 days/wk</strong>
                             </div>
                             <input type="range" id="simDietSlider" min="0" max="7" value="0" class="custom-slider">
@@ -441,7 +444,7 @@
                         <!-- Solar Panel capacity -->
                         <div class="simulator-slider-group">
                             <div class="slider-label-row">
-                                <span>Rooftop Solar Capacity</span>
+                                <label for="simSolarSlider">Rooftop Solar Capacity</label>
                                 <strong id="simSolarVal">None</strong>
                             </div>
                             <input type="range" id="simSolarSlider" min="0" max="10" value="0" step="2" class="custom-slider">
@@ -455,7 +458,7 @@
                         <!-- Fly Counter -->
                         <div class="simulator-slider-group">
                             <div class="slider-label-row">
-                                <span>Annual Flight Hours</span>
+                                <label for="simFlightSlider">Annual Flight Hours</label>
                                 <strong id="simFlightVal">15 Hours</strong>
                             </div>
                             <input type="range" id="simFlightSlider" min="0" max="60" value="15" step="5" class="custom-slider">
@@ -469,7 +472,7 @@
                         <!-- Public Transit Commutes -->
                         <div class="simulator-slider-group">
                             <div class="slider-label-row">
-                                <span>Public Transit Commutes</span>
+                                <label for="simTransitSlider">Public Transit Commutes</label>
                                 <strong id="simTransitVal">None</strong>
                             </div>
                             <input type="range" id="simTransitSlider" min="0" max="7" value="0" class="custom-slider">
@@ -483,7 +486,7 @@
                         <!-- Home Heating System -->
                         <div class="simulator-slider-group">
                             <div class="slider-label-row">
-                                <span>Home Heating System</span>
+                                <label for="simHeatingSlider">Home Heating System</label>
                                 <strong id="simHeatingVal">Gas Furnace</strong>
                             </div>
                             <input type="range" id="simHeatingSlider" min="0" max="2" value="0" class="custom-slider">
@@ -497,7 +500,7 @@
                         <!-- Waste Diversion Rate -->
                         <div class="simulator-slider-group">
                             <div class="slider-label-row">
-                                <span>Waste Diversion Rate</span>
+                                <label for="simWasteSlider">Waste Diversion Rate</label>
                                 <strong id="simWasteVal">20%</strong>
                             </div>
                             <input type="range" id="simWasteSlider" min="0" max="100" value="20" step="5" class="custom-slider">

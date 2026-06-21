@@ -1309,10 +1309,31 @@ async function handleChatSubmit(event) {
     const query = input.value.trim();
     input.value = '';
 
-    // Append User Bubble
+    // HTML escape function
+    const escapeHTML = (str) => {
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    };
+
+    // Safe formatting function (converts **bold** and * list items without injection vulnerabilities)
+    const formatSafeText = (str) => {
+        const escaped = escapeHTML(str);
+        // Replace bold **text**
+        let formatted = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // Replace leading * list item marker
+        formatted = formatted.replace(/^\* (.*?)$/gm, '&bull; $1');
+        // Replace newlines
+        return formatted.replace(/\n/g, '<br>');
+    };
+
+    // Append User Bubble safely
     const userBubble = document.createElement("div");
     userBubble.className = "chat-bubble user-bubble";
-    userBubble.innerHTML = `<p>${query}</p>`;
+    userBubble.innerHTML = `<p>${escapeHTML(query)}</p>`;
     output.appendChild(userBubble);
     output.scrollTop = output.scrollHeight;
 
@@ -1366,7 +1387,7 @@ async function handleChatSubmit(event) {
         loadingBubble.remove();
         const aiBubble = document.createElement("div");
         aiBubble.className = "chat-bubble system-bubble";
-        aiBubble.innerHTML = `<p>${reply.replace(/\n/g, '<br>')}</p>`;
+        aiBubble.innerHTML = `<p>${formatSafeText(reply)}</p>`;
         output.appendChild(aiBubble);
         output.scrollTop = output.scrollHeight;
     }, 800);
@@ -1468,8 +1489,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const tabButtons = document.querySelectorAll(".tab-btn");
     tabButtons.forEach(btn => {
         btn.addEventListener("click", () => {
-            tabButtons.forEach(b => b.classList.remove("active"));
+            tabButtons.forEach(b => {
+                b.classList.remove("active");
+                b.setAttribute("aria-selected", "false");
+            });
             btn.classList.add("active");
+            btn.setAttribute("aria-selected", "true");
 
             const activeTab = btn.dataset.tab;
             const tabPanels = document.querySelectorAll(".tab-panel");
