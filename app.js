@@ -683,6 +683,8 @@ function calculateTwinScoresLocal() {
     if (appState.whatIf.evStatus === 2) mobilityModifier += 35;
     const flightExcess = Math.max(0, appState.whatIf.flightHours - 10);
     mobilityModifier -= (flightExcess * 0.8);
+    // Public transit commutes add up to +21 points to mobility score
+    mobilityModifier += (appState.whatIf.transitDays * 3.0);
     let finalMobilityScore = Math.max(10, Math.min(99, Math.round(baseMobilityScore + mobilityModifier)));
 
     // Energy
@@ -691,6 +693,10 @@ function calculateTwinScoresLocal() {
     energyModifier += (appState.whatIf.solarCapacitykW * 3.5);
     const acDiff = appState.whatIf.acTempSetting - 22;
     energyModifier += (acDiff * 2.5);
+
+    // Heating system efficiency: Heat Pump adds +12, Electric Baseboard adds +3, Gas is baseline
+    if (appState.whatIf.heatingType === 1) energyModifier += 3.0;
+    if (appState.whatIf.heatingType === 2) energyModifier += 12.0;
 
     const solarBattery = document.getElementById("solarBatteryToggle")?.checked;
     const peakShift = document.getElementById("peakShiftToggle")?.checked;
@@ -704,7 +710,10 @@ function calculateTwinScoresLocal() {
     let finalFoodScore = Math.max(10, Math.min(99, Math.round(baseFoodScore + foodModifier)));
 
     // Waste
-    let finalWasteScore = profile.baseMetrics.waste_score;
+    let baseWasteScore = profile.baseMetrics.waste_score;
+    // Waste diversion rate shifts the waste score up to +40 points
+    let wasteModifier = (appState.whatIf.wasteDivertedPercent - 20) * 0.5;
+    let finalWasteScore = Math.max(10, Math.min(99, Math.round(baseWasteScore + wasteModifier)));
 
     // Apply Planner Checklists
     appState.plannerTasks.forEach(task => {
@@ -1459,6 +1468,20 @@ async function updateDashboard() {
                 const data = await response.json();
                 scores.currentTons = data.currentTotalTons;
                 scores.targetTons = data.targetTotalTons;
+                
+                // Map the ML computed tons back to visual scores (0-100 scale where 100 is best)
+                scores.mobility = Math.max(10, Math.min(99, Math.round(100 - (data.mobilityTons * 18.0))));
+                scores.energy = Math.max(10, Math.min(99, Math.round(100 - (data.energyTons * 18.0))));
+                scores.food = Math.max(10, Math.min(99, Math.round(100 - (data.foodTons * 30.0))));
+                scores.waste = Math.max(10, Math.min(99, Math.round(100 - (data.wasteTons * 60.0))));
+                
+                scores.overall = Math.round(
+                    (scores.mobility * 0.35) + 
+                    (scores.energy * 0.35) + 
+                    (scores.food * 0.20) + 
+                    (scores.waste * 0.10)
+                );
+                
                 logTelemetry('engine', `Carbon calculations computed: Current=${data.currentTotalTons}t, Target=${data.targetTotalTons}t.`);
             }
         } catch (e) {
